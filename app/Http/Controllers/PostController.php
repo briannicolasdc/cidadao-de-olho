@@ -12,7 +12,7 @@ class PostController extends Controller
      *
      * @return response()
      */
-    
+
 
     function getRedes(){
 
@@ -33,8 +33,7 @@ class PostController extends Controller
         }
 
         arsort($result);
-        $newResult = array_slice($result, 0, 5, true);
-        $jsonResult = json_encode($newResult);
+        $jsonResult = json_encode($result);
         echo ($jsonResult);
     }
 
