@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::get('/posts', [PostController::class, "deputados"]);
+Route::get('/redes', [PostController::class, "getRedes"]);

@@ -12,12 +12,30 @@ class PostController extends Controller
      *
      * @return response()
      */
-    public function deputados()
-    {
+    
+
+    function getRedes(){
+
         $response = Http::get('http://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json');
-        $jsonData = $response->json();
-        dd($jsonData);
-        return $jsonData;
+        $jsonData = json_decode($response, true);
+        $result = array();
+        foreach ($jsonData['list'] as $key => $i) {
+            foreach ($i['redesSociais'] as $itemKey => $value){
+                $redeSocial = $value['redeSocial'];
+                if(array_key_exists($redeSocial['nome'], $result)){
+                    $result[$redeSocial['nome']]++;
+                }else{
+                    $result[$redeSocial['nome']] = 1;
+                }
+
+
+            }
+        }
+
+        arsort($result);
+        $newResult = array_slice($result, 0, 5, true);
+        $jsonResult = json_encode($newResult);
+        echo ($jsonResult);
     }
 
 
