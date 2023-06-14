@@ -21,6 +21,13 @@ class PostController extends Controller
         dd($array);
     }*/
 
+    public function getData(){
+        $response = Http::get('http://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json');
+        $jsonData = json_decode($response, true);
+        return $jsonData;
+    }
+
+
     public function deputados()
     {
         $response = Http::get('http://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json');
