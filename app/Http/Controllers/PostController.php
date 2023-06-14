@@ -30,8 +30,7 @@ class PostController extends Controller
 
     public function deputados()
     {
-        $response = Http::get('http://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json');
-        $jsonData = json_decode($response, true);
+        $jsonData = (new PostController)->getData();
         $total = Array();
         foreach ($jsonData['list'] as $key ) {
             $id = $key['id'];
@@ -52,7 +51,6 @@ class PostController extends Controller
             array_push($total, $tmp);
 
         }
-        sort($total);
         usort($total, fn($a, $b) => $b['valor'] <=> $a['valor']);
         $total = array_slice($total, 0, 5, true);
         dd($total);
@@ -60,8 +58,7 @@ class PostController extends Controller
 
     function getRedes(){
 
-        $response = Http::get('http://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json');
-        $jsonData = json_decode($response, true);
+        $jsonData = (new PostController)->getData();
         $result = array();
 
         foreach ($jsonData['list'] as $key => $i) {

@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\DB as DB;
 
 try {
     DB::connection()->getPDO();
-    echo DB::connection()->getDatabaseName();
+    echo 'connected to:' . DB::connection()->getDatabaseName();
     } catch (\Exception $e) {
     echo 'None';
 }

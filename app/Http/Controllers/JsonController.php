@@ -10,12 +10,9 @@ use Illuminate\Support\Facades\Redirect;
 class JsonController extends Controller
 {
 
-
-
-
     public function store(){
-    $response = PostController::getData();
-    deputados::insert($response)->withSuccess('Great! Successfully store data in json format in db');
+        $response = (new PostController)->getData();
+        deputados::insert($response)->withSuccess('Successfully store data in json format in db');
     }
 
 }
