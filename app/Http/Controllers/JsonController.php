@@ -12,7 +12,7 @@ class JsonController extends Controller
 
     public function store(){
         $response = (new PostController)->getData();
-        deputados::insert($response)->withSuccess('Successfully store data in json format in db');
+        deputados::create($response)->withSuccess('Successfully store data in json format in db');
     }
 
 }
