@@ -12,7 +12,7 @@ Após conectar ao db, abra outra aba no terminal
 e insira o comando 'php artisan serve' e acesse a url 127.0.0.1:8000;
 
 Em seguida,abra uma terceira aba no terminal
-e rode o comando php db:wipe e php artisan migrate:fresh para
+e rode php artisan migrate:fresh para
 que o DB funcione corretamente;
 
 Descrição do código:
