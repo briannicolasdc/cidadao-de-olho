@@ -2,19 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\deputados;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\Deputados;
 
 class JsonController extends Controller
 {
+    public function store()
+    {
+        $response = (new PostController)->getDeputadosList();
+        Deputados::truncate();
+        foreach ($response['list'] as $deputadoData) {
+            $redesSociais = array_map(fn ($redeSocialObj) => $redeSocialObj['redeSocial']['nome'], $deputadoData['redesSociais']);
+            $deputado = new Deputados([
+                'id' => $deputadoData['id'],
+                'nome' => $deputadoData['nome'],
+                'partido' => $deputadoData['partido'],
+                'endereco' => $deputadoData['endereco'],
+                'telefone' => $deputadoData['telefone'],
+                'fax' => $deputadoData['fax'],
+                'email' => $deputadoData['email'],
+                'sitePessoal' => $deputadoData['sitePessoal'] ?? 'empty',
+                'naturalidade' => $deputadoData['naturalidadeMunicipio'],
+                'uf' => $deputadoData['naturalidadeUf'],
+                'nascimento' => $deputadoData['dataNascimento'],
+                'redesSociais' => json_encode($redesSociais, true),
+            ]);
+            $deputado->save();
+        }
 
-    public function store(){
-        $response = (new PostController)->getData();
-        deputados::create($response)->withSuccess('Successfully store data in json format in db');
+        $deputadosData = [];
+        foreach (Deputados::all() as $deputado) {
+            array_push($deputadosData, $deputado->getRawOriginal());
+        }
+        dd($deputadosData);
     }
-
 }
-
-

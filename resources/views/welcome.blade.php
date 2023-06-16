@@ -17,8 +17,9 @@
     </head>
     <body class="antialiased">
         <div>
-            <a href="http://127.0.0.1:8000/redes">Link para a lista das redes sociais mais usadas pelos deputados</a><br>
-            <a href="http://127.0.0.1:8000/posts">Link para a lista dos 5 deputados mais gastadores em json</a><br>
+            <a href="http://127.0.0.1:8000/redes">Redes Sociais mais utilizadas</a><br>
+            <a href="http://127.0.0.1:8000/posts">5 deputados que mais gastaram</a><br>
+            <a href="http://127.0.0.1:8000/lista-deputados">Lista de deputados</a><br>
             <?php
 
 use Illuminate\Support\Facades\DB as DB;
