@@ -19,12 +19,13 @@ return new class extends Migration
             $table->string('endereco');
             $table->string('telefone');
             $table->string('fax');
+            $table->string('email');
             $table->string('sitePessoal');
             $table->string('naturalidade');
             $table->string('uf');
-            $table->date('nascimento');
-
-
+            $table->string('nascimento');
+            $table->jsonb('redesSociais');
+            $table->timestamps();
 
         });
     }

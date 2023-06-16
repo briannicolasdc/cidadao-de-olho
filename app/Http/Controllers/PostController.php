@@ -7,58 +7,51 @@ use Illuminate\Support\Facades\Http;
 
 class PostController extends Controller
 {
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     *
-     */
 
-    /*public function sort (array $tmpArray){
-        $array = array();
-        usort($tmpArray, fn($a, $b) => $b['valor'] <=> $a['valor']);
-        $array = array_slice($tmpArray, 0, 5, true);
-        dd($array);
-    }*/
-
-    public function getData(){
-        $response = Http::get('http://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json');
+    public function getDeputadosList(){
+        $response = Http::get('https://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json');
         $jsonData = json_decode($response, true);
         return $jsonData;
+    }
+
+    private function getGastosMesDeputado($deputadoId, $mes) {
+        $data = Http::get('https://dadosabertos.almg.gov.br/ws/prestacao_contas/verbas_indenizatorias/deputados/'. $deputadoId . '/2019/' . $mes .'?formato=json');
+        $dataDecoded = $data->json();
+        return $dataDecoded;
+    }
+
+    private function getGastoTotalDeputado($deputadoId) {
+        $somaDeputado = 0;
+        for($mes = 1; $mes <= 12; $mes++) {
+            $gastoDeputado = $this->getGastosMesDeputado($deputadoId, $mes);
+
+            if(!empty($gastoDeputado))
+                foreach ($gastoDeputado['list'] as $gasto){
+                    $somaDeputado += $gasto['valor'];
+                }
+        }
+
+        return $somaDeputado;
     }
 
 
     public function deputados()
     {
-        $jsonData = (new PostController)->getData();
-        $total = Array();
-        foreach ($jsonData['list'] as $key ) {
-            $id = $key['id'];
-            $value = 0;
-
-            for($i = 1; $i <= 12; $i++) {
-                $data = Http::get('https://dadosabertos.almg.gov.br/ws/prestacao_contas/verbas_indenizatorias/deputados/'. $id . '/2019/' . $i .'?formato=json');
-                $dataDecoded = json_decode($data, true);
-
-                if(!empty($dataDecoded))
-                    foreach ($dataDecoded['list'] as $gasto){
-                        $value += $gasto['valor'];
-                    }
-                continue;
-            }
-
-            $tmp = array("valor"=> $value, "nome"=> $key['nome']);
-            array_push($total, $tmp);
-
+        $deputadosResponse = $this->getDeputadosList();
+        $listTotalGastos = [];
+        foreach ($deputadosResponse['list'] as $deputado) {
+            $tmp = ["valor"=> $this->getGastoTotalDeputado($deputado['id']), "nome"=> $deputado['nome']];
+            array_push($listTotalGastos, $tmp);
         }
-        usort($total, fn($a, $b) => $b['valor'] <=> $a['valor']);
-        $total = array_slice($total, 0, 5, true);
-        dd($total);
+
+        usort($listTotalGastos, fn($a, $b) => $b['valor'] <=> $a['valor']);
+        $top5Deputados = array_slice($listTotalGastos, 0, 5, true);
+        dd($top5Deputados);
     }
 
     function getRedes(){
 
-        $jsonData = (new PostController)->getData();
+        $jsonData = $this->getDeputadosList();
         $result = array();
 
         foreach ($jsonData['list'] as $key => $i) {
@@ -77,4 +70,4 @@ class PostController extends Controller
         dd($jsonResult);
     }
 
-}?>
+}

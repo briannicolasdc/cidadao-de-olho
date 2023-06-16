@@ -21,5 +21,4 @@ Route::get('/', function () {
 
 Route::get('/posts', [PostController::class, "deputados"]);
 Route::get('/redes', [PostController::class, "getRedes"]);
-
-Route::post('store-json', [JsonController::class, 'store']);
+Route::get('/lista-deputados', [JsonController::class, 'store']);
